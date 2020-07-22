@@ -14,7 +14,7 @@ EOF
 
 # Install App
 echo "- Installing App -"
-yum -y -q -e 3 install haproxy
+yum -y -q -e 3 install haproxy ftp
 
 # Configure firewall
 echo "- Update Firewall -"
@@ -78,8 +78,8 @@ backend ftpservers
     balance roundrobin
     stick on src
     stick-table type ip size 10240k expire 30m
-    server target 10.0.0.18 check port 21 inter 10s rise 2 fall 2
-    server target 10.0.0.18 check port 10000-10020 inter 10s rise 2 fall 2
+    server target 10.0.0.18:21 check
+    server target 10.0.0.18:10000-10020 check
 
 backend httpservers
     balance     roundrobin
