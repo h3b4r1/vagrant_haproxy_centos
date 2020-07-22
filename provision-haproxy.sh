@@ -14,7 +14,7 @@ EOF
 
 # Install App
 echo "- Installing App -"
-dnf -yqe 3 install haproxy
+yum -y -q -e 3 install haproxy
 
 # Configure firewall
 echo "- Update Firewall -"
@@ -24,6 +24,10 @@ firewall-cmd --permanent --add-service=https
 firewall-cmd --permanent --add-service=ftp
 firewall-cmd --permanent --add-port=10000-10020/tcp
 firewall-cmd --reload
+
+echo "- Selinux to Permissive -"
+sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
+setenforce 0
 
 cat <<EOF > /etc/haproxy/haproxy.cfg
 global

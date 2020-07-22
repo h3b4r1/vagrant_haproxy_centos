@@ -5,6 +5,14 @@ Vagrant.configure("2") do |config|
 		vb.memory = 1024
 		vb.cpus = 1
 	end
+	haproxy.vm.network "forwarded_port", guest: 20, host: 20
+	haproxy.vm.network "forwarded_port", guest: 21, host: 21
+	haproxy.vm.network "forwarded_port", guest: 80, host: 80
+	haproxy.vm.network "forwarded_port", guest: 443, host: 443
+	for i in 10000..10020
+		config.vm.network :forwarded_port, guest: i, host: i
+	end
+	haproxy.vm.network "forwarded_port", guest: 65222, host: 65222
 	haproxy.vm.network "private_network", ip: "10.0.0.17", netmask:"255.255.255.0"
 	haproxy.vm.provision "shell", path: "https://github.com/davetayl/Vagrant-General/raw/master/setup-centos7.sh"
 	haproxy.vm.provision "shell", path: "./provision-haproxy.sh"
