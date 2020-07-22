@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
 	haproxy.vm.network "forwarded_port", guest: 21, host: 21
 	haproxy.vm.network "forwarded_port", guest: 80, host: 80
 	haproxy.vm.network "forwarded_port", guest: 443, host: 443
-	for i in 10000..10020
+	for i in 10001..10020
 		config.vm.network :forwarded_port, guest: i, host: i
 	end
 	haproxy.vm.network "forwarded_port", guest: 65222, host: 65222
