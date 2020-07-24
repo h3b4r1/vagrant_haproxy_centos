@@ -9,9 +9,15 @@ Vagrant.configure("2") do |config|
 	haproxy.vm.network "forwarded_port", guest: 21, host: 21
 	haproxy.vm.network "forwarded_port", guest: 80, host: 80
 	haproxy.vm.network "forwarded_port", guest: 443, host: 443
-	# for i in 65000..65020
-		# config.vm.network "forwarded_port", guest: i, host: i
-	# end
+	haproxy.vm.network "forwarded_port", guest: 10000, host: 10000
+	haproxy.vm.network "forwarded_port", guest: 10001, host: 10001
+	haproxy.vm.network "forwarded_port", guest: 10002, host: 10002
+	haproxy.vm.network "forwarded_port", guest: 10003, host: 10003
+	haproxy.vm.network "forwarded_port", guest: 10004, host: 10004
+	haproxy.vm.network "forwarded_port", guest: 10005, host: 10005
+	haproxy.vm.network "forwarded_port", guest: 10006, host: 10006
+	haproxy.vm.network "forwarded_port", guest: 10007, host: 10007
+	haproxy.vm.network "forwarded_port", guest: 10008, host: 10008
 	haproxy.vm.network "forwarded_port", guest: 65222, host: 65222
 	haproxy.vm.network "private_network", ip: "10.0.0.17", netmask:"255.255.255.0"
 	haproxy.vm.provision "shell", path: "https://github.com/davetayl/Vagrant-General/raw/master/setup-centos7.sh"

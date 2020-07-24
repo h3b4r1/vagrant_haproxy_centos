@@ -31,73 +31,70 @@ setenforce 0
 
 cat <<EOF > /etc/haproxy/haproxy.cfg
 global
-    log         127.0.0.1 local2
+	log		 127.0.0.1 local2
 
-    chroot      /var/lib/haproxy
-    pidfile     /var/run/haproxy.pid
-    maxconn     1000
-    user        haproxy
-    group       haproxy
-    daemon
+	chroot	  /var/lib/haproxy
+	pidfile	 /var/run/haproxy.pid
+	maxconn	 1000
+	user		haproxy
+	group	   haproxy
+	daemon
 
-    # turn on stats unix socket
-    stats socket /var/lib/haproxy/stats
+	# turn on stats unix socket
+	stats socket /var/lib/haproxy/stats
 
-    # utilize system-wide crypto-policies
-    ssl-default-bind-ciphers PROFILE=SYSTEM
-    ssl-default-server-ciphers PROFILE=SYSTEM
+	# utilize system-wide crypto-policies
+	ssl-default-bind-ciphers PROFILE=SYSTEM
+	ssl-default-server-ciphers PROFILE=SYSTEM
 
 defaults
-    timeout connect 10s
-    timeout client 30s
-    timeout server 30s
+	timeout connect 10s
+	timeout client 30s
+	timeout server 30s
 	mode tcp
-    log global
-    maxconn 3000
+	log global
+	maxconn 3000
 
 # Front End configs
 frontend ftp_balancer
-    bind 10.0.2.15:21 transparent
-	bind 10.0.2.15:10000-10020 transparent
-    use_backend     ftpservers
+	bind 10.0.2.15:21
+	bind 10.0.2.15:10000-10020
+	use_backend ftpservers
 
 frontend http_balancer
-    bind 10.0.2.15:80
-    use_backend     httpservers
+	bind 10.0.2.15:80
+	use_backend httpservers
 
 frontend https_balancer
-    bind 10.0.2.15:443
-    use_backend     httpsservers
+	bind 10.0.2.15:443
+	use_backend httpsservers
 	
 frontend ssh_balancer
-    bind 10.0.2.15:65222
-    use_backend     sshservers
+	bind 10.0.2.15:65222
+	use_backend sshservers
 
 # Back end configs
 backend ftpservers
-    balance roundrobin
-    stick on src
-    stick-table type ip size 10240k expire 30m
-    server target 10.0.0.18:21 check
-    server target 10.0.0.18:10000-10020 check
+	balance roundrobin
+	server target 10.0.0.18 check port 21 inter 20s
 
 backend httpservers
-    balance     roundrobin
-    server  ftp-iinet  10.0.0.18:80  check
+	balance roundrobin
+	server target 10.0.0.18 check port 80 inter 20s
 
 backend httpsservers
-    balance     roundrobin
-    server  ftp-iinet  10.0.0.18:443  check
+	balance roundrobin
+	server target 10.0.0.18 check port 443 inter 20s
 
 backend sshservers
-    balance     roundrobin
-    server  ftp-iinet  10.0.0.18:22  check
+	balance roundrobin
+	server target 10.0.0.18 check port 22 inter 20s
 
 EOF
 
 cat <<EOF >> /etc/rsyslog.conf
 
-local2.*                       /var/log/haproxy.log
+local2.*					   /var/log/haproxy.log
 EOF
 
 
