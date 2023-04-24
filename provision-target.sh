@@ -20,16 +20,25 @@ firewall-cmd --permanent --add-service=ftp
 firewall-cmd --permanent --add-port=10000-10020/tcp
 firewall-cmd --reload
 
+echo "- Selinux to Permissive -"
+sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
+setenforce 0
 
 # Install App
 echo "- Installing App -"
 yum -y -q -e 3 install vsftpd httpd mod_ssl openssl
 
 echo "- Configure VSFTPD -"
+mkdir /home/ftp
+touch /home/ftp/testfile.txt
+
 cat <<EOF >> /etc/vsftpd/vsftpd.conf
 pasv_enable=Yes
-pasv_max_port=10000
-pasv_min_port=10020
+pasv_min_port=10000
+pasv_max_port=10020
+
+no_anon_password=YES
+anon_root=/home/ftp
 EOF
 
 echo "- Configure httpd -"
